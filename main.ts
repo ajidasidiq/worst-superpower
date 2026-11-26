@@ -36,6 +36,15 @@ function gate(entry: string): void {
       `gate failed: entry is ${entry.length} characters, over the ${MAX_CHARS} limit`,
     );
   }
+  // No control characters, finished sentence.
+  for (const ch of entry) {
+    if (ch.charCodeAt(0) < 0x20 || ch.charCodeAt(0) === 0x7f) {
+      throw new Error("gate failed: entry must not contain control characters");
+    }
+  }
+  if (!/[.!?]$/.test(entry)) {
+    throw new Error("gate failed: entry must end with terminal punctuation");
+  }
 }
 
 gate(ENTRY);
